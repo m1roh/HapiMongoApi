@@ -9,8 +9,8 @@ const JobSchema = new Schema({
   },
   company: {
     type: Schema.Types.ObjectId,
-    required: true,
-    ref: 'Company'
+    ref: 'Company',
+    required: true
   }
 });
 

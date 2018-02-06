@@ -1,133 +1,135 @@
 const Job = require('./job.model');
+const Company = require('../company/company.model');
 
 module.exports = {
 
   /**
-   * Create a candidate
+   * Create a job
    * @param {*} req The request object
    * @param {*} h The handler interface
    */
-  create(req, h) {
+  async create(req, h) {
 
-    const candidateData = {
-      firstName: req.payload.firstName,
-      lastName: req.payload.lastName,
-      email: req.payload.email,
+    const jobData = {
+      title: req.payload.title,
       company: req.payload.company
     };
 
-    return Candidate.create(candidateData).then((candidate) => {
+    try {
+      const job = await Job.create(jobData);
+
+      const _company = await Company.findById(req.payload.company);
+
+      _company.jobs.push(job),
+        _company.save();
+
       return h
-        .response(`${candidate} : created successfully`)
+        .response(`${job} : created successfully`)
         .code(200);
-    }).catch((err) => {
-      return h
-        .code(500)
-        .response(err);
-    });
+    } catch (error) {
+      throw error;
+    }
   },
 
   /**
-   * Find all candidates
+   * Find all jobs
    * @param {*} req The request object
    * @param {*} h The handler interface
    */
-  list(req, h) {
+  async list(req, h) {
 
-    return Candidate.find({}).exec().then((candidate) => {
+    try {
+      const jobs = await Job.find({})
+        .populate('company')
+        .exec();
+
       return h
-        .response({ candidates: candidate })
+        .response(jobs)
         .code(200);
-    }).catch((err) => {
-      return h
-        .response({ err: err })
-        .code(500);
-    });
+    } catch (error) {
+      throw error;
+    }
   },
 
   /**
-   * Get a single candidate by id
+   * Get a single job by id
    * @param {*} req The request object
    * @param {*} h The handler interface
    */
-  get(req, h) {
+  async get(req, h) {
 
-    return Candidate.findById(req.params.id).exec().then((candidate) => {
-      if (!candidate) {
+    try {
+      const job = await Job.findById(req.params.id).exec();
+
+      if (!job) {
         return h
-          .response('Candidate not found')
+          .response('Job not found')
           .code(404);
       } else {
         return h
-          .response({ candidate: candidate })
+          .response({ job: job })
           .code(200);
       }
-    }).catch((err) => {
-      return h
-        .response({ err: err })
-        .code(500);
-    });
+    } catch (error) {
+      return error;
+    }
   },
 
   /**
-   * Update a candidate by id
+   * Update a job by id
    * @param {*} req The request object
    * @param {*} h The handler interface
    */
-  update (req, h) {
+  async update(req, h) {
 
-    let candidateNewDatas = {};
+    let jobNewDatas = {};
 
-    if (req.payload.firstName) {
-      candidateNewDatas.firstName = req.payload.firstName;
-    }
-
-    if (req.payload.lastName) {
-      candidateNewDatas.lastName = req.payload.lastName;
-    }
-
-    if (req.payload.email) {
-      candidateNewDatas.email = req.payload.email;
+    if (req.payload.title) {
+      jobNewDatas.title = req.payload.title;
     }
 
     if (req.payload.company) {
-      candidateNewDatas.company = req.payload.company;
+      jobNewDatas.company = req.payload.company;
     }
 
-    return Candidate.findByIdAndUpdate(req.params.id, candidateNewDatas, { new: true }).exec().then((candidate) => {
-      if (!candidate) {
+    try {
+      const job = await Job.findByIdAndUpdate(req.params.id, jobNewDatas, { new: true }).exec();
+
+      if (!job) {
         return h
-          .response({ err: 'Candidate not found ' })
+          .response({ err: 'Job not found ' })
           .code(404);
       }
 
       return h
-        .response(`${candidate} : updated successfully`)
+        .response(`${job} : updated successfully`)
         .code(200);
-    }).catch((err) => {
-      return h
-        .code(500)
-        .response(err);
-    });
+    } catch (error) {
+      throw error;
+    }
   },
 
   /**
-   * Delete a candidate by id
+   * Delete a job by id
    * @param {*} req The request object
    * @param {*} h The handler interface
    */
-  remove (req, h) {
+  async remove(req, h) {
 
-    Candidate.findByIdAndRemove(req.params.id, (err, res) => {
-      if (err) {
-        return h
-          .response({ err: err })
-          .code(500);
-      }
-    });
+    try {
+      const job = await Job.findByIdAndRemove(req.params.id, (err, res) => {
+        if (err) {
+          return h
+            .response({ err: err })
+            .code(500);
+        }
+      })
 
-    return h
-      .response(`Candidate with id : ${req.params.id} correctly suppressed`)
-      .code(200);
+      return h
+        .response(`Job with id : ${req.params.id} correctly suppressed`)
+        .code(200);
+    } catch (error) {
+      throw error;
+    }
   }
 }

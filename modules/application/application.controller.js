@@ -7,7 +7,7 @@ module.exports = {
    * @param {*} req The request object
    * @param {*} h The handler interface
    */
-  create(req, h) {
+  async create(req, h) {
 
     const candidateData = {
       firstName: req.payload.firstName,
@@ -16,15 +16,15 @@ module.exports = {
       company: req.payload.company
     };
 
-    return Candidate.create(candidateData).then((candidate) => {
+    try {
+      const candidate = await Candidate.create(candidateData);
+
       return h
         .response(`${candidate} : created successfully`)
         .code(200);
-    }).catch((err) => {
-      return h
-        .code(500)
-        .response(err);
-    });
+    } catch (error) {
+      throw error;
+    }
   },
 
   /**
@@ -32,17 +32,17 @@ module.exports = {
    * @param {*} req The request object
    * @param {*} h The handler interface
    */
-  list(req, h) {
+  async list(req, h) {
 
-    return Candidate.find({}).exec().then((candidate) => {
+    try {
+      const candidate = await Candidate.find({}).exec();
+
       return h
         .response({ candidates: candidate })
         .code(200);
-    }).catch((err) => {
-      return h
-        .response({ err: err })
-        .code(500);
-    });
+    } catch (error) {
+      throw error;
+    }
   },
 
   /**
@@ -50,23 +50,23 @@ module.exports = {
    * @param {*} req The request object
    * @param {*} h The handler interface
    */
-  get(req, h) {
+  async get(req, h) {
 
-    return Candidate.findById(req.params.id).exec().then((candidate) => {
+    try {
+      const candidate = await Candidate.findById(req.params.id).exec();
+
       if (!candidate) {
         return h
           .response('Candidate not found')
           .code(404);
-      } else {
-        return h
-          .response({ candidate: candidate })
-          .code(200);
       }
-    }).catch((err) => {
+
       return h
-        .response({ err: err })
-        .code(500);
-    });
+        .response({ candidate: candidate })
+        .code(200);
+    } catch (error) {
+      throw error;
+    }
   },
 
   /**
@@ -74,7 +74,7 @@ module.exports = {
    * @param {*} req The request object
    * @param {*} h The handler interface
    */
-  update (req, h) {
+  async update(req, h) {
 
     let candidateNewDatas = {};
 
@@ -94,7 +94,9 @@ module.exports = {
       candidateNewDatas.company = req.payload.company;
     }
 
-    return Candidate.findByIdAndUpdate(req.params.id, candidateNewDatas, { new: true }).exec().then((candidate) => {
+    try {
+      const candidate = await Candidate.findByIdAndUpdate(req.params.id, candidateNewDatas, { new: true }).exec();
+
       if (!candidate) {
         return h
           .response({ err: 'Candidate not found ' })
@@ -104,11 +106,9 @@ module.exports = {
       return h
         .response(`${candidate} : updated successfully`)
         .code(200);
-    }).catch((err) => {
-      return h
-        .code(500)
-        .response(err);
-    });
+    } catch (error) {
+      throw error;
+    }
   },
 
   /**
@@ -116,18 +116,22 @@ module.exports = {
    * @param {*} req The request object
    * @param {*} h The handler interface
    */
-  remove (req, h) {
+  async remove(req, h) {
 
-    Candidate.findByIdAndRemove(req.params.id, (err, res) => {
-      if (err) {
-        return h
-          .response({ err: err })
-          .code(500);
-      }
-    });
+    try {
+      const candidate = await Candidate.findByIdAndRemove(req.params.id, (err, res) => {
+        if (err) {
+          return h
+            .response({ err: err })
+            .code(500);
+        }
+      });
 
-    return h
-      .response(`Candidate with id : ${req.params.id} correctly suppressed`)
-      .code(200);
+      return h
+        .response(`Candidate with id : ${req.params.id} correctly suppressed`)
+        .code(200);
+    } catch (error) {
+      throw error;
+    }
   }
 }

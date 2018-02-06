@@ -1,10 +1,9 @@
 const JobController = require('./job.controller');
 const Joi = require('joi');
 
-const schema = Joi.object().keys({
-  name: Joi.string().required(),
-  city: Joi.string().optional(),
-  address: Joi.string().optional()
+const jobSchema = Joi.object().keys({
+  title: Joi.string().required(),
+  company: Joi.string().required()
 });
 
 module.exports = [{
@@ -35,7 +34,7 @@ module.exports = [{
   method: 'POST',
   config: {
     validate: {
-      payload: schema
+      payload: jobSchema
     },
     handler: JobController.create,
     description: 'Create a new job',
@@ -51,9 +50,8 @@ module.exports = [{
         id: Joi.string().required()
       }),
       payload: Joi.object().keys({
-        name: Joi.string().optional(),
-        city: Joi.string().optional(),
-        address: Joi.string().optional()
+        title: Joi.string().optional(),
+        company: Joi.string().optional()
       })
     },
     handler: JobController.update,

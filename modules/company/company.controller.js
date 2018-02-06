@@ -7,7 +7,7 @@ module.exports = {
    * @param {*} req The request object
    * @param {*} h The handler interface
    */
-  create(req, h) {
+  async create(req, h) {
 
     const companyData = {
       name: req.payload.name,
@@ -15,15 +15,15 @@ module.exports = {
       address: req.payload.address
     };
 
-    return Company.create(companyData).then((company) => {
+    try {
+      const company = await Company.create(companyData);
+
       return h
         .response(`${company} : created successfully`)
         .code(200);
-    }).catch((err) => {
-      return h
-        .code(500)
-        .response(err);
-    });
+    } catch (error) {
+      throw error;
+    }
   },
 
   /**
@@ -31,17 +31,20 @@ module.exports = {
    * @param {*} req The request object
    * @param {*} h The handler interface
    */
-  list(req, h) {
+  async list(req, h) {
 
-    return Company.find({}).populate('candidates').exec().then((company) => {
+    try {
+      const company = await Company.find({})
+        .populate('candidates')
+        .populate('jobs')
+        .exec();
+
       return h
         .response({ companies: company })
         .code(200);
-    }).catch((err) => {
-      return h
-        .response({ err: err })
-        .code(500);
-    });
+    } catch (error) {
+      throw error;
+    }
   },
 
   /**
@@ -49,23 +52,23 @@ module.exports = {
    * @param {*} req The request object
    * @param {*} h The handler interface
    */
-  get(req, h) {
+  async get(req, h) {
 
-    return Company.findById(req.params.id).exec().then((company) => {
+    try {
+      const company = await Company.findById(req.params.id).exec();
+
       if (!company) {
         return h
           .response('Company not found')
           .code(404);
-      } else {
-        return h
-          .response({ company: company })
-          .code(200);
       }
-    }).catch((err) => {
+
       return h
-        .response({ err: err })
-        .code(500);
-    });
+        .response({ company: company })
+        .code(200);
+    } catch (error) {
+      throw error;
+    }
   },
 
   /**
@@ -73,7 +76,7 @@ module.exports = {
    * @param {*} req The request object
    * @param {*} h The handler interface
    */
-  update (req, h) {
+  async update(req, h) {
 
     let companyNewDatas = {};
 
@@ -89,7 +92,9 @@ module.exports = {
       companyNewDatas.address = req.payload.address;
     }
 
-    return Company.findByIdAndUpdate(req.params.id, companyNewDatas, { new: true }).exec().then((company) => {
+    try {
+      const company = await Company.findByIdAndUpdate(req.params.id, companyNewDatas, { new: true }).exec();
+
       if (!company) {
         return h
           .response({ err: 'Company not found ' })
@@ -99,11 +104,9 @@ module.exports = {
       return h
         .response(`${company} : updated successfully`)
         .code(200);
-    }).catch((err) => {
-      return h
-        .code(500)
-        .response(err);
-    });
+    } catch (error) {
+      throw error;
+    }
   },
 
   /**
@@ -111,18 +114,22 @@ module.exports = {
    * @param {*} req The request object
    * @param {*} h The handler interface
    */
-  remove (req, h) {
+  async remove(req, h) {
 
-    Company.findByIdAndRemove(req.params.id, (err, res) => {
-      if (err) {
-        return h
-          .response({ err: err })
-          .code(500);
-      }
-    });
+    try {
+      const company = await Company.findByIdAndRemove(req.params.id, (err, res) => {
+        if (err) {
+          return h
+            .response({ err: err })
+            .code(500);
+        }
+      });
 
-    return h
-      .response(`Company with id : ${req.params.id} correctly suppressed`)
-      .code(200);
+      return h
+        .response(`Company with id : ${req.params.id} correctly suppressed`)
+        .code(200);
+    } catch (error) {
+      throw error;
+    }
   }
 }
