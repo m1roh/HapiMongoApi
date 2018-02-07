@@ -7,6 +7,7 @@ module.exports = {
    * Create a candidate
    * @param {*} req The request object
    * @param {*} h The handler interface
+   * @return {*} A newly created candidate
    */
   async create(req, h) {
 
@@ -37,6 +38,7 @@ module.exports = {
    * Find all candidates
    * @param {*} req The request object
    * @param {*} h The handler interface
+   * @return {*} All the candidates
    */
   async list(req, h) {
 
@@ -44,7 +46,7 @@ module.exports = {
       const candidate = await Candidate.find({}).populate('company').exec();
 
       return h
-        .response({ candidates: candidate })
+        .response({candidates: candidate})
         .code(200);
     } catch (error) {
       throw error;
@@ -55,6 +57,7 @@ module.exports = {
    * Get a single candidate by id
    * @param {*} req The request object
    * @param {*} h The handler interface
+   * @return {*} A single candidate found with a given ID
    */
   async get(req, h) {
 
@@ -67,7 +70,7 @@ module.exports = {
           .code(404);
       } else {
         return h
-          .response({ candidate: candidate })
+          .response({candidate: candidate})
           .code(200);
       }
     } catch (error) {
@@ -79,8 +82,9 @@ module.exports = {
    * Update a candidate by id
    * @param {*} req The request object
    * @param {*} h The handler interface
+   * @return {*} The updated candidate
    */
-  async update (req, h) {
+  async update(req, h) {
 
     let candidateNewDatas = {};
 
@@ -101,11 +105,11 @@ module.exports = {
     }
 
     try {
-      const candidate = await Candidate.findByIdAndUpdate(req.params.id, candidateNewDatas, { new: true }).exec();
+      const candidate = await Candidate.findByIdAndUpdate(req.params.id, candidateNewDatas, {new: true}).exec();
 
       if (!candidate) {
         return h
-          .response({ err: 'Candidate not found ' })
+          .response({err: 'Candidate not found '})
           .code(404);
       }
 
@@ -121,14 +125,15 @@ module.exports = {
    * Delete a candidate by id
    * @param {*} req The request object
    * @param {*} h The handler interface
+   * @return {*} A success message
    */
-  async remove (req, h) {
+  async remove(req, h) {
 
     try {
       const candidate = await Candidate.findByIdAndRemove(req.params.id, (err, res) => {
         if (err) {
           return h
-            .response({ err: err })
+            .response({err: err})
             .code(500);
         }
       });
@@ -140,4 +145,4 @@ module.exports = {
       throw error;
     }
   }
-}
+};

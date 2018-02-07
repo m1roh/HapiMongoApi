@@ -13,7 +13,7 @@ const server = new Hapi.Server({
 
 (async () => {
   try {
-    await server.register(plugins)
+    await server.register(plugins);
   } catch (err) {
     console.log(err);
   }
@@ -23,7 +23,7 @@ const server = new Hapi.Server({
 
     // Once server started, connect to Mongo through Mongoose
     mongoose.connect(mongoDbUrl, {}).then(() => {
-      console.log(`Connected to Mongo server`);
+      console.log('Connected to Mongo server');
     }).catch((err) => {
       console.log(err);
     });

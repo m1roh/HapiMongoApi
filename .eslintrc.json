@@ -1,0 +1,45 @@
+{
+  "extends": ["google"],
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2017
+  },
+  "rules": {
+    "quotes": ["warn", "single", "avoid-escape"],
+    "eqeqeq": "warn",
+    "brace-style": ["error", "1tbs"],
+    "eol-last": "off",
+    "no-nested-ternary": "off",
+    "padded-blocks": ["off", "never"],
+    "space-before-blocks": [1, "always"],
+    "comma-dangle": ["off", "never"],
+    "max-len": [1, {
+      "code": 132,
+      "tabWidth": 2
+    }],
+    "import/order": ["off", "newlines-between"],
+    "space-before-function-paren": ["warn", {
+      "anonymous": "always",
+      "named": "never",
+      "asyncArrow": "always"
+    }],
+    "no-multiple-empty-lines": ["error", {
+      "max": 1
+    }],
+    "no-param-reassign": ["warn", {
+      "props": false
+    }],
+    "class-methods-use-this": "off",
+    "no-unused-vars": "warn",
+    "consistent-return": "off",
+    "prefer-destructuring": "off",
+    "newline-per-chained-call": "off",
+    "arrow-body-style": "off",
+    "object-shorthand": "off",
+    "no-prototype-builtins": "off",
+    "global-require": "off",
+    "no-undefined": "off",
+    "no-debugger": "off",
+    "no-plusplus": "warn"
+  }
+}

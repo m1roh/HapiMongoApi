@@ -6,6 +6,7 @@ module.exports = {
    * Create a company
    * @param {*} req The request object
    * @param {*} h The handler interface
+   * @return {*} A newly created company
    */
   async create(req, h) {
 
@@ -30,6 +31,7 @@ module.exports = {
    * Find all companies
    * @param {*} req The request object
    * @param {*} h The handler interface
+   * @return {*} All the companies
    */
   async list(req, h) {
 
@@ -40,7 +42,7 @@ module.exports = {
         .exec();
 
       return h
-        .response({ companies: company })
+        .response({companies: company})
         .code(200);
     } catch (error) {
       throw error;
@@ -51,6 +53,7 @@ module.exports = {
    * Get a single company by id
    * @param {*} req The request object
    * @param {*} h The handler interface
+   * @return {*} A single company found with a given ID
    */
   async get(req, h) {
 
@@ -64,7 +67,7 @@ module.exports = {
       }
 
       return h
-        .response({ company: company })
+        .response({company: company})
         .code(200);
     } catch (error) {
       throw error;
@@ -75,6 +78,7 @@ module.exports = {
    * Update a company by id
    * @param {*} req The request object
    * @param {*} h The handler interface
+   * @return {*} The updated company
    */
   async update(req, h) {
 
@@ -93,11 +97,11 @@ module.exports = {
     }
 
     try {
-      const company = await Company.findByIdAndUpdate(req.params.id, companyNewDatas, { new: true }).exec();
+      const company = await Company.findByIdAndUpdate(req.params.id, companyNewDatas, {new: true}).exec();
 
       if (!company) {
         return h
-          .response({ err: 'Company not found ' })
+          .response({err: 'Company not found '})
           .code(404);
       }
 
@@ -113,6 +117,7 @@ module.exports = {
    * Delete a company by id
    * @param {*} req The request object
    * @param {*} h The handler interface
+   * @return {*} A success message
    */
   async remove(req, h) {
 
@@ -120,7 +125,7 @@ module.exports = {
       const company = await Company.findByIdAndRemove(req.params.id, (err, res) => {
         if (err) {
           return h
-            .response({ err: err })
+            .response({err: err})
             .code(500);
         }
       });
@@ -132,4 +137,4 @@ module.exports = {
       throw error;
     }
   }
-}
+};

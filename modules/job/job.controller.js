@@ -7,6 +7,7 @@ module.exports = {
    * Create a job
    * @param {*} req The request object
    * @param {*} h The handler interface
+   * @return {*} A newly created job
    */
   async create(req, h) {
 
@@ -35,6 +36,7 @@ module.exports = {
    * Find all jobs
    * @param {*} req The request object
    * @param {*} h The handler interface
+   * @return {*} All the jobs
    */
   async list(req, h) {
 
@@ -55,6 +57,7 @@ module.exports = {
    * Get a single job by id
    * @param {*} req The request object
    * @param {*} h The handler interface
+   * @return {*} A single job found with the given ID
    */
   async get(req, h) {
 
@@ -67,7 +70,7 @@ module.exports = {
           .code(404);
       } else {
         return h
-          .response({ job: job })
+          .response({job: job})
           .code(200);
       }
     } catch (error) {
@@ -79,6 +82,7 @@ module.exports = {
    * Update a job by id
    * @param {*} req The request object
    * @param {*} h The handler interface
+   * @return {*} The updated job
    */
   async update(req, h) {
 
@@ -93,11 +97,11 @@ module.exports = {
     }
 
     try {
-      const job = await Job.findByIdAndUpdate(req.params.id, jobNewDatas, { new: true }).exec();
+      const job = await Job.findByIdAndUpdate(req.params.id, jobNewDatas, {new: true}).exec();
 
       if (!job) {
         return h
-          .response({ err: 'Job not found ' })
+          .response({err: 'Job not found '})
           .code(404);
       }
 
@@ -113,6 +117,7 @@ module.exports = {
    * Delete a job by id
    * @param {*} req The request object
    * @param {*} h The handler interface
+   * @return {*} A success message
    */
   async remove(req, h) {
 
@@ -120,10 +125,10 @@ module.exports = {
       const job = await Job.findByIdAndRemove(req.params.id, (err, res) => {
         if (err) {
           return h
-            .response({ err: err })
+            .response({err: err})
             .code(500);
         }
-      })
+      });
 
       return h
         .response(`Job with id : ${req.params.id} correctly suppressed`)
@@ -132,4 +137,4 @@ module.exports = {
       throw error;
     }
   }
-}
+};

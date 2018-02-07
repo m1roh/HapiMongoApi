@@ -3,9 +3,10 @@ const Application = require('./application.model');
 module.exports = {
 
   /**
-   * Create a application
+   * Create an application
    * @param {*} req The request object
    * @param {*} h The handler interface
+   * @return {*} A newly created application
    */
   async create(req, h) {
 
@@ -30,18 +31,19 @@ module.exports = {
    * Find all applications
    * @param {*} req The request object
    * @param {*} h The handler interface
+   * @return {*} All the applications
    */
   async list(req, h) {
 
     try {
       const application = await Application
-      .find({})
-      .populate('job')
-      .populate('candidate')
-      .exec();
+        .find({})
+        .populate('job')
+        .populate('candidate')
+        .exec();
 
       return h
-        .response({ applications: application })
+        .response({applications: application})
         .code(200);
     } catch (error) {
       throw error;
@@ -52,6 +54,7 @@ module.exports = {
    * Get a single application by id
    * @param {*} req The request object
    * @param {*} h The handler interface
+   * @return {*} An application found with a given ID
    */
   async get(req, h) {
 
@@ -65,7 +68,7 @@ module.exports = {
       }
 
       return h
-        .response({ application: application })
+        .response({application: application})
         .code(200);
     } catch (error) {
       throw error;
@@ -76,6 +79,7 @@ module.exports = {
    * Update a application by id
    * @param {*} req The request object
    * @param {*} h The handler interface
+   * @return {*} The updated application
    */
   async update(req, h) {
 
@@ -98,11 +102,11 @@ module.exports = {
     }
 
     try {
-      const application = await Application.findByIdAndUpdate(req.params.id, applicationNewDatas, { new: true }).exec();
+      const application = await Application.findByIdAndUpdate(req.params.id, applicationNewDatas, {new: true}).exec();
 
       if (!application) {
         return h
-          .response({ err: 'Application not found ' })
+          .response({err: 'Application not found '})
           .code(404);
       }
 
@@ -118,6 +122,7 @@ module.exports = {
    * Delete a application by id
    * @param {*} req The request object
    * @param {*} h The handler interface
+   * @return {*} A success message
    */
   async remove(req, h) {
 
@@ -125,7 +130,7 @@ module.exports = {
       const application = await Application.findByIdAndRemove(req.params.id, (err, res) => {
         if (err) {
           return h
-            .response({ err: err })
+            .response({err: err})
             .code(500);
         }
       });
@@ -137,4 +142,4 @@ module.exports = {
       throw error;
     }
   }
-}
+};

@@ -9,6 +9,8 @@
   "author": "m1roh",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^1.0.3",
+    "boom": "^7.1.1",
     "good": "^8.0.1",
     "good-console": "^7.0.1",
     "good-file": "^6.0.1",
@@ -20,5 +22,10 @@
     "joi": "^13.1.2",
     "mongoose": "^5.0.3",
     "vision": "^5.3.1"
+  },
+  "devDependencies": {
+    "eslint": "^4.17.0",
+    "eslint-config-google": "^0.9.1",
+    "eslint-plugin-import": "^2.8.0"
   }
 }
