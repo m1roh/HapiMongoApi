@@ -1,10 +1,10 @@
 const ApplicationController = require('./application.controller');
 const Joi = require('joi');
 
-const schema = Joi.object().keys({
-  name: Joi.string().required(),
-  city: Joi.string().optional(),
-  address: Joi.string().optional()
+const applicationSchema = Joi.object().keys({
+  hired: Joi.boolean().optional(),
+  job: Joi.string().required(),
+  candidate: Joi.string().required()
 });
 
 module.exports = [{
@@ -26,7 +26,7 @@ module.exports = [{
       })
     },
     handler: ApplicationController.get,
-    description: 'Find a application by ID',
+    description: 'Find an application by ID',
     tags: ['api'],
     notes: 'Returns a single application found with a given ID'
   }
@@ -35,7 +35,7 @@ module.exports = [{
   method: 'POST',
   config: {
     validate: {
-      payload: schema
+      payload: applicationSchema
     },
     handler: ApplicationController.create,
     description: 'Create a new application',
@@ -57,7 +57,7 @@ module.exports = [{
       })
     },
     handler: ApplicationController.update,
-    description: 'Find and update a application by ID',
+    description: 'Find and update an application by ID',
     tags: ['api'],
     notes: 'Returns an updated application'
   }
@@ -71,7 +71,7 @@ module.exports = [{
       })
     },
     handler: ApplicationController.remove,
-    description: 'Delete a application by ID',
+    description: 'Delete an application by ID',
     tags: ['api'],
     notes: 'Returns a success message'
   }
